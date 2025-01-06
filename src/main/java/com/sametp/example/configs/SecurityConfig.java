@@ -19,7 +19,14 @@ public class SecurityConfig {
            auth.anyRequest().authenticated();
         });
         http.oauth2ResourceServer( server -> {
-            server.jwt(Customizer.withDefaults());
+            //-> for jwt token
+                // server.jwt(Customizer.withDefaults());
+            //-> for opaqueToken
+                /*
+                    jwt token resource server itself extracts and checks the token, but since the opaque token is a random string,
+                    we have to have it checked by the authorization server. Check the application.yml file.
+                 */
+            server.opaqueToken(Customizer.withDefaults());
         });
         http.sessionManagement(session -> {
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
