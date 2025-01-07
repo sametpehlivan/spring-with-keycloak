@@ -20,15 +20,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     //@Autowired
     //CustomizedJwtConverter jwtConverter;
+    private static final String[] AUTH_WHITELIST = {
+            "/v3/api-docs*/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests( auth -> {
-            auth
-               .requestMatchers(HttpMethod.GET,"/tutorials").permitAll()
-               .requestMatchers(HttpMethod.GET,"/tutorials/*").permitAll()
-               .anyRequest()
-               .authenticated();
+            auth.requestMatchers(HttpMethod.GET,"/tutorials").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/tutorials/*").permitAll()
+                    .requestMatchers(AUTH_WHITELIST).permitAll()
+                    .anyRequest().authenticated();
         });
         http.oauth2ResourceServer( server -> {
                 server.jwt(jwtConfigurer ->{

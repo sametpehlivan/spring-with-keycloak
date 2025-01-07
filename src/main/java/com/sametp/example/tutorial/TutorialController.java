@@ -1,6 +1,7 @@
 package com.sametp.example.tutorial;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +11,11 @@ import java.util.List;
 @RequestMapping("/tutorials")
 @ResponseBody
 @RequiredArgsConstructor
+@ResponseStatus(HttpStatus.OK)
 public class TutorialController {
     private final TutorialService service;
     @GetMapping
+
     // for unauthorized  or authorized users
     public List<Tutorial> getAll(){
         return service.findAll();

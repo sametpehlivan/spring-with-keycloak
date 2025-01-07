@@ -1,5 +1,18 @@
 server:
   port: 9090
+
+keycloak:
+  username: tutorial-service-client
+  password: iupiv5UGmN1GcXSR5OsT2oHQn9QY85Vx
+  realm: tutorial-service-realm
+  uri: http://localhost:8081
+  auth-server-url: ${keycloak.uri}/realms/${keycloak.realm}/protocol/openid-connect
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: ${keycloak.username}
+      client-secret: ${keycloak.password}
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;AUTO_RECONNECT=TRUE;
@@ -13,11 +26,12 @@ spring:
       resourceserver:
         ## -> for jwt token
         jwt:
-          issuer-uri: "http://localhost:8081/realms/tutorial-service-realm" ## public_key for extract and other confs
+          issuer-uri: ${keycloak.uri}/realms/${keycloak.realm}
+            ## public_key for extract and other confs
         ## -> for opaque token
         ##opaquetoken:
-        ##client-id: tutorial-service-client
-          ##client-secret: iupiv5UGmN1GcXSR5OsT2oHQn9QY85Vx
+        ##client-id: ${keycloak.username}
+          ##client-secret:  ${keycloak.password}
           ##  The introspection-uri is used to validate and retrieve metadata about an access token by sending it to the authorization server,
           ## allowing the server to determine whether the token is active, its scopes, and other associated information.
-            ##introspection-uri: http://localhost:8081/realms/tutorial-service-realm/protocol/openid-connect/token/introspect
+            ##introspection-uri: ${keycloak.auth-server-url}/token/introspect
