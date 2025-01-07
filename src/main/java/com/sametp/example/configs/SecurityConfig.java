@@ -1,8 +1,10 @@
 package com.sametp.example.configs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,22 +13,24 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
+    @Autowired
+    CustomizedJwtConverter jwtConverter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests( auth -> {
-           auth.anyRequest().authenticated();
+            auth
+               .requestMatchers(HttpMethod.GET,"/tutorials").permitAll()
+               .requestMatchers(HttpMethod.GET,"/tutorials/*").permitAll()
+               .anyRequest()
+               .authenticated();
         });
         http.oauth2ResourceServer( server -> {
-            //-> for jwt token
-                // server.jwt(Customizer.withDefaults());
-            //-> for opaqueToken
-                /*
-                    jwt token resource server itself extracts and checks the token, but since the opaque token is a random string,
-                    we have to have it checked by the authorization server. Check the application.yml file.
-                 */
-            server.opaqueToken(Customizer.withDefaults());
+                server.jwt(jwtConfigurer ->
+                        jwtConfigurer.jwtAuthenticationConverter(jwtConverter)
+                );
         });
         http.sessionManagement(session -> {
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

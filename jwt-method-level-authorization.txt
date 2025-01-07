@@ -1,0 +1,22 @@
+Jwt - Method Level Authorization uses JwtAuthenticationConverter by default.
+And in this Converter Token, it searches for the "scope" field or the "scp" field.
+{
+    ...
+    ...
+    ...
+    //keycloak uses this
+    "scope": "profile email", -> Converts to Granted Authority List in Spring -> ["SCOPE_profile","SCOPE_email"]
+        or
+    "scope": ["profile","email"], -> the same goes
+        or
+    "scp": "profile email", -> the same goes
+        or
+    "scp": ["profile","email"] , -> the same goes
+    ...
+    ...
+    ...
+
+}
+
+Adds "SCOPE_" to the beginning of each value separated by array or white space.
+And these authorities(scopes,roles) are added to JwtAuthenticationToken.

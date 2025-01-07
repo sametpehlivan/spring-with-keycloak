@@ -3,6 +3,7 @@ package com.sametp.example.tutorial;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +26,7 @@ public class TutorialService {
                         .description(tutorial.getDescription())
                         .title(tutorial.getTitle())
                         .published(false)
+                        .owner(tutorial.getOwner())
                         .build()
         );
     }
@@ -38,9 +40,10 @@ public class TutorialService {
         validate(tutorial);
         return tutorialRepository.save(tutorial);
     }
+    @Transactional
     public Tutorial delete(Tutorial tutorial){
         validate(tutorial);
-        tutorialRepository.deleteById(tutorial.getId());
+        tutorialRepository.deleteByOwnerAndId(tutorial.getOwner(), tutorial.getId());
         return tutorial;
     }
 
