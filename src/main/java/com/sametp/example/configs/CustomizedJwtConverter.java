@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
-@Component
+//@Component
 public class CustomizedJwtConverter implements Converter<Jwt,AbstractAuthenticationToken> {
     ObjectMapper objectMapper = new ObjectMapper();
     @Override

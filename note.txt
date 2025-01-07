@@ -20,3 +20,9 @@ And in this Converter Token, it searches for the "scope" field or the "scp" fiel
 
 Adds "SCOPE_" to the beginning of each value separated by array or white space.
 And these authorities(scopes,roles) are added to JwtAuthenticationToken.
+
+
+
+In the new configuration, the roles for which the client has tokens are a separate property in keycloak.
+was added as and this property and default prefix were changed in Standard JwtAuthenticationConverter.
+Check the SecurityConfig class
